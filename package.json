@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --watch",
+    "test:staged": "jest --passWithNoTests"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,8 @@
     "eslint": "^8.42.0",
     "eslint-config-standard-with-typescript": "^35.0.0",
     "git-commit-msg-linter": "^5.0.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
     "typescript": "^5.1.3"
   }
 }
