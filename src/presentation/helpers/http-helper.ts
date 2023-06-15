@@ -1,4 +1,4 @@
-import type { IHttpResponse } from '../protocols/http'
+import type { IHttpResponse } from '../protocols'
 
 import { ServerError } from '../errors'
 
