@@ -1,6 +1,6 @@
 import type { IHttpResponse } from '../protocols/http'
 
-import { ServerError } from '../errors/server-error'
+import { ServerError } from '../errors'
 
 export const success = (body?: any): IHttpResponse => ({
   statusCode: 200,

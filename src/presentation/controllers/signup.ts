@@ -2,8 +2,7 @@ import type { IHttpRequest, IHttpResponse } from '../protocols/http'
 import type { IController } from '../protocols/controller'
 import type { IEmailValidator } from '../protocols/email-validator'
 
-import { MissingParamError } from '../errors/missing-param-error'
-import { InvalidParamError } from '../errors/invalid-param-error'
+import { MissingParamError, InvalidParamError } from '../errors'
 import { badRequest, serverError, success } from '../helpers/http-helper'
 
 export class SignUpController implements IController {
