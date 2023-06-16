@@ -1,23 +1,42 @@
 import type { IEmailValidator } from '../../protocols'
+import type { IAddAccount, AddAccountModel } from '../../../domain/usecases/add-account'
+import type { AccountModel } from '../../../domain/models/account'
 
 import { SignUpController } from '../signup'
 import { MissingParamError, InvalidParamError, ServerError } from '../../errors'
 
-interface ISut {
-  sut: SignUpController
-  emailValidatorStub: IEmailValidator
-}
 class EmailValidatorStub implements IEmailValidator {
-  isValid (_: string): boolean {
+  isValid (email: string): boolean {
     return true
   }
 }
 
+class AddAccountStub implements IAddAccount {
+  add (account: AddAccountModel): AccountModel {
+    const fakeAccount = {
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password'
+    }
+
+    return fakeAccount
+  }
+}
+
+interface ISut {
+  addAccountStub: IAddAccount
+  sut: SignUpController
+  emailValidatorStub: IEmailValidator
+}
+
 const makeSut = (): ISut => {
   const emailValidatorStub = new EmailValidatorStub()
-  const sut = new SignUpController(emailValidatorStub)
+  const addAccountStub = new AddAccountStub()
+  const sut = new SignUpController(emailValidatorStub, addAccountStub)
 
   return {
+    addAccountStub,
     emailValidatorStub,
     sut
   }
@@ -92,5 +111,19 @@ describe('[SignUp Controller]', () => {
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  it('Should call AddAccount with correct values', () => {
+    const { sut, addAccountStub } = makeSut()
+
+    const addAccountSpy = jest.spyOn(addAccountStub, 'add')
+
+    sut.handle({ body: httpRequestBodySample })
+
+    expect(addAccountSpy).toBeCalledWith({
+      name: httpRequestBodySample.name,
+      email: httpRequestBodySample.email,
+      password: httpRequestBodySample.password
+    })
   })
 })
