@@ -30,9 +30,9 @@ export class SignUpController implements IController {
         return badRequest(new InvalidParamError('email'))
       }
 
-      this.addAccount.add({ name, email, password })
+      const account = this.addAccount.add({ name, email, password })
 
-      return success()
+      return success(account)
     } catch (err) {
       return serverError()
     }
