@@ -32,8 +32,6 @@ export class SignUpController implements IController {
 
       const account = await this.addAccount.add({ name, email, password })
 
-      console.log('here!')
-
       return success(account)
     } catch (err) {
       return serverError()
