@@ -1,5 +1,5 @@
 
-import type { IEncrypter } from '../../protocols/encrypter'
+import type { IEncrypter } from './db-add-account-protocols'
 
 import { DBAddAccount } from './db-add-account'
 
