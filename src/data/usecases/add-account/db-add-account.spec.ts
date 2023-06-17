@@ -75,4 +75,15 @@ describe('[DBAddAccount usecases]', () => {
 
     expect(addSpy).toHaveBeenCalledWith({ ...accountDataSample, password: 'encrypted_password' })
   })
+
+  it('Should throw if AddAccountRepository throws', async () => {
+    const { sut, addAccountRepositoryStub } = makeSut()
+    jest.spyOn(addAccountRepositoryStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => {
+      reject(new Error())
+    }))
+
+    const promise = sut.add(accountDataSample)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
