@@ -2,9 +2,9 @@ import type { IHttpResponse } from '../protocols'
 
 import { ServerError } from '../errors'
 
-export const success = (body?: any): IHttpResponse => ({
+export const success = (body: any): IHttpResponse => ({
   statusCode: 200,
-  body: body ?? {}
+  body
 })
 
 export const badRequest = (error: Error): IHttpResponse => ({
