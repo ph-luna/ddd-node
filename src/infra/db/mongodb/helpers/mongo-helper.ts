@@ -2,16 +2,23 @@ import { MongoClient, type Collection } from 'mongodb'
 
 export const MongoHelper = {
   dbClient: null as MongoClient | null,
+  connectionUrl: null as string | null,
 
   async connect (connectionUrl: string) {
     this.dbClient = await MongoClient.connect(connectionUrl)
+    this.connectionUrl = connectionUrl
   },
 
   async disconnect () {
     await this.dbClient.close()
+    this.dbClient = null
   },
 
-  getCollection (collectionName: string): Collection {
+  async getCollection (collectionName: string): Promise<Collection> {
+    if (!this.dbClient) {
+      await this.connect(this.connectionUrl)
+    }
+
     return this.dbClient.db().collection(collectionName)
   },
 
