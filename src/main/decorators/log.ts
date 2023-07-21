@@ -1,4 +1,3 @@
-import { success } from '../../presentation/helpers/http-helper'
 import type { IController, IHttpRequest, IHttpResponse } from '../../presentation/protocols'
 
 export class LogControllerDecorator implements IController {
@@ -9,8 +8,8 @@ export class LogControllerDecorator implements IController {
   }
 
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
-    await this.controller.handle(httpRequest)
+    const httpResponse = await this.controller.handle(httpRequest)
 
-    return success({})
+    return httpResponse
   }
 }
