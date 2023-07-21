@@ -10,7 +10,7 @@ class ControllerStub implements IController {
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     const httpResponse: IHttpResponse = {
       statusCode: 200,
-      body: {}
+      body: httpRequest.body
     }
 
     return await new Promise(resolve => { resolve(httpResponse) })
@@ -25,7 +25,7 @@ const makeSut = (): ISut => {
 }
 
 describe('[LogController Decorator]', () => {
-  const httpRequestSample = {
+  const httpRequestSample: IHttpRequest = {
     body: {
       email: 'any_email@mail.com',
       name: 'Any Name',
@@ -33,12 +33,20 @@ describe('[LogController Decorator]', () => {
     }
   }
 
-  it('Should call handle from parent controller', async () => {
+  it('Should call handle function from parent controller', async () => {
     const { sut, controllerStub } = makeSut()
     const handleSpy = jest.spyOn(controllerStub, 'handle')
 
     await sut.handle(httpRequestSample)
 
     expect(handleSpy).toBeCalledWith(httpRequestSample)
+  })
+
+  it('Should return the same value from parent controller', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(httpRequestSample)
+
+    expect(httpResponse).toEqual({ statusCode: 200, ...httpRequestSample })
   })
 })
