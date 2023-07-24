@@ -12,7 +12,7 @@ export const badRequest = (error: Error): IHttpResponse => ({
   body: error
 })
 
-export const serverError = (): IHttpResponse => ({
+export const serverError = (err: Error): IHttpResponse => ({
   statusCode: 500,
-  body: new ServerError()
+  body: new ServerError(err.stack)
 })
