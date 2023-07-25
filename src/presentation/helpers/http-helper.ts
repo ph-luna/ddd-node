@@ -1,4 +1,4 @@
-import type { IHttpResponse } from '../protocols'
+import type { IHttpRequest, IHttpResponse } from '../protocols'
 
 import { ServerError } from '../errors'
 
@@ -15,4 +15,8 @@ export const badRequest = (error: Error): IHttpResponse => ({
 export const serverError = (err: Error): IHttpResponse => ({
   statusCode: 500,
   body: new ServerError(err.stack)
+})
+
+export const makeFakeRequest = (args: any): IHttpRequest => ({
+  body: args
 })
