@@ -11,6 +11,8 @@ export const adaptRoute = (controller: IController) => {
 
     const httpResponse = await controller.handle(httpRequest)
 
+    if (httpResponse.statusCode === 500) return res.status(httpResponse.statusCode).json(httpResponse.body.message)
+
     return res.status(httpResponse.statusCode).json(httpResponse.body)
   }
 }
