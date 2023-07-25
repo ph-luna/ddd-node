@@ -7,9 +7,19 @@ const makeFakeLogin = (): { email: string, password: string } => ({
   password: 'anypassword123'
 })
 
+interface SutType {
+  sut: LoginController
+}
+
+const makeSut = (): SutType => {
+  const sut = new LoginController()
+
+  return { sut }
+}
+
 describe('[Login Controller]', () => {
   it('Should return 400 if no email is provided', async () => {
-    const sut = new LoginController()
+    const { sut } = makeSut()
     const { email, ...fakeLogin } = makeFakeLogin()
 
     const httpResponse = await sut.handle({ body: fakeLogin })
@@ -18,7 +28,7 @@ describe('[Login Controller]', () => {
   })
 
   it('Should return 400 if no password is provided', async () => {
-    const sut = new LoginController()
+    const { sut } = makeSut()
     const { password, ...fakeLogin } = makeFakeLogin()
 
     const httpResponse = await sut.handle({ body: fakeLogin })
