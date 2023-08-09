@@ -2,7 +2,7 @@ import type { IController, IHttpRequest, IHttpResponse } from '../../protocols'
 import type { IEmailValidator } from '../signup/signup-protocols'
 import type { IAuthentication } from '../../../domain/usecases/authentication'
 
-import { badRequest, serverError, success } from '../../helpers/http-helper'
+import { badRequest, serverError, success, unauthorized } from '../../helpers/http-helper'
 import { InvalidParamError, MissingParamError } from '../../errors'
 
 export class LoginController implements IController {
@@ -30,7 +30,11 @@ export class LoginController implements IController {
         return badRequest(new InvalidParamError('email'))
       }
 
-      await this.authentication.auth(email, password)
+      const accessToken = await this.authentication.auth(email, password)
+
+      if (!accessToken) {
+        return unauthorized()
+      }
 
       return success({})
     } catch (error) {

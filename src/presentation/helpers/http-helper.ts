@@ -1,6 +1,6 @@
 import type { IHttpRequest, IHttpResponse } from '../protocols'
 
-import { ServerError } from '../errors'
+import { ServerError, UnauthorizedError } from '../errors'
 
 export const success = (body: any): IHttpResponse => ({
   statusCode: 200,
@@ -19,4 +19,9 @@ export const serverError = (err: Error): IHttpResponse => ({
 
 export const makeFakeRequest = (args: any): IHttpRequest => ({
   body: args
+})
+
+export const unauthorized = (): IHttpResponse => ({
+  statusCode: 401,
+  body: new UnauthorizedError()
 })
