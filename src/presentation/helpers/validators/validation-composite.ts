@@ -1,14 +1,14 @@
 import type { IValidation } from './validation'
 
 export class ValidationComposite implements IValidation {
-  private readonly validations: IValidation[]
+  private readonly validationsLeaf: IValidation[]
 
   constructor (validations: IValidation[]) {
-    this.validations = validations
+    this.validationsLeaf = validations
   }
 
   validate (input: any): Error | null {
-    for (const validation of this.validations) {
+    for (const validation of this.validationsLeaf) {
       const error = validation.validate(input)
       if (error) return error
     }

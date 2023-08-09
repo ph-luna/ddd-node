@@ -1,7 +1,7 @@
 import { MissingParamError } from '../../errors'
 import type { IValidation } from './validation'
 
-export class RequiredFieldValidation implements IValidation {
+export class RequiredFieldValidationLeaf implements IValidation {
   private readonly fieldName: string
 
   constructor (fieldName: string) {

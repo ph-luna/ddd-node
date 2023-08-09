@@ -1,6 +1,6 @@
 import type { IValidation } from '../../presentation/helpers/validators/validation'
 
-import { RequiredFieldValidation } from '../../presentation/helpers/validators/required-field-validation'
+import { RequiredFieldValidationLeaf } from '../../presentation/helpers/validators/required-field-validation-leaf'
 import { ValidationComposite } from '../../presentation/helpers/validators/validation-composite'
 import { makeSignUpValidation } from './signup-validation'
 
@@ -11,7 +11,7 @@ describe('[SignUp Validation Factory', () => {
     makeSignUpValidation()
     const validations: IValidation[] = []
     for (const field of ['name', 'email', 'password']) {
-      validations.push(new RequiredFieldValidation(field))
+      validations.push(new RequiredFieldValidationLeaf(field))
     }
     expect(ValidationComposite).toHaveBeenCalledWith(validations)
   })
