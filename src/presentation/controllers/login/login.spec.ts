@@ -2,7 +2,7 @@ import type { IEmailValidator } from '../signup/signup-protocols'
 import type { IAuthentication } from '../../../domain/usecases/authentication'
 
 import { InvalidParamError, MissingParamError } from '../../errors'
-import { badRequest, makeFakeRequest, serverError } from '../../helpers/http-helper'
+import { badRequest, makeFakeRequest, serverError, unauthorized } from '../../helpers/http-helper'
 import { LoginController } from './login'
 
 const loginSample = {
@@ -17,7 +17,7 @@ class EmailValidatorStub implements IEmailValidator {
 }
 
 class AuthenticationStub implements IAuthentication {
-  async auth (email: string, password: string): Promise<string> {
+  async auth (email: string, password: string): Promise<string | null> {
     return 'any_token000'
   }
 }
@@ -94,5 +94,15 @@ describe('[Login Controller]', () => {
     await sut.handle(makeFakeRequest(loginSample))
 
     expect(authSpy).toBeCalledWith(loginSample.email, loginSample.password)
+  })
+
+  it('Should return 401 if invalid credentials are provided', async () => {
+    const { sut, authenticationStub } = makeSut()
+
+    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise((resolve) => { resolve(null) }))
+
+    const httpResponse = await sut.handle(makeFakeRequest(loginSample))
+
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
