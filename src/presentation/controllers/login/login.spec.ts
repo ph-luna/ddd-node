@@ -1,5 +1,4 @@
-import type { IEmailValidator } from '../signup/signup-protocols'
-import type { IAuthentication } from '../../../domain/usecases/authentication'
+import type { IEmailValidator, IAuthentication } from './login-protocols'
 
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, makeFakeRequest, serverError, unauthorized } from '../../helpers/http-helper'

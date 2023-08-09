@@ -1,6 +1,4 @@
-import type { IController, IHttpRequest, IHttpResponse } from '../../protocols'
-import type { IEmailValidator } from '../signup/signup-protocols'
-import type { IAuthentication } from '../../../domain/usecases/authentication'
+import type { IController, IHttpRequest, IHttpResponse, IEmailValidator, IAuthentication } from './login-protocols'
 
 import { badRequest, serverError, success, unauthorized } from '../../helpers/http-helper'
 import { InvalidParamError, MissingParamError } from '../../errors'
