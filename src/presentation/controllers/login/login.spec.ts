@@ -17,14 +17,14 @@ class EmailValidatorStub implements IEmailValidator {
 
 interface SutType {
   sut: LoginController
-  emailValidator: EmailValidatorStub
+  emailValidatorStub: EmailValidatorStub
 }
 
 const makeSut = (): SutType => {
-  const emailValidator = new EmailValidatorStub()
-  const sut = new LoginController(emailValidator)
+  const emailValidatorStub = new EmailValidatorStub()
+  const sut = new LoginController(emailValidatorStub)
 
-  return { sut, emailValidator }
+  return { sut, emailValidatorStub }
 }
 
 describe('[Login Controller]', () => {
@@ -47,8 +47,8 @@ describe('[Login Controller]', () => {
   })
 
   it('Should call EmailValidator with correct email', async () => {
-    const { sut, emailValidator } = makeSut()
-    const isValidSpy = jest.spyOn(emailValidator, 'isValid')
+    const { sut, emailValidatorStub } = makeSut()
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
 
     await sut.handle(makeFakeRequest(loginSample))
 
@@ -56,9 +56,9 @@ describe('[Login Controller]', () => {
   })
 
   it('Should return 400 if an invalid email is provided', async () => {
-    const { sut, emailValidator } = makeSut()
+    const { sut, emailValidatorStub } = makeSut()
 
-    jest.spyOn(emailValidator, 'isValid').mockReturnValueOnce(false)
+    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
 
     const httpResponse = await sut.handle(makeFakeRequest(loginSample))
 
@@ -66,9 +66,9 @@ describe('[Login Controller]', () => {
   })
 
   it('Should return 500 if email validator throws', async () => {
-    const { sut, emailValidator } = makeSut()
+    const { sut, emailValidatorStub } = makeSut()
 
-    jest.spyOn(emailValidator, 'isValid').mockImplementationOnce(() => {
+    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
       throw new Error()
     })
 
