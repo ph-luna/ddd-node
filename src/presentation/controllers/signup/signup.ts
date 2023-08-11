@@ -14,7 +14,9 @@ export class SignUpController implements IController {
   async handle (httpRequest: IHttpRequest): Promise<IHttpResponse> {
     try {
       const validationError = this.validation.validate(httpRequest.body)
-      if (validationError) return badRequest(validationError)
+      if (validationError) {
+        return badRequest(validationError)
+      }
       const { name, email, password } = httpRequest.body
       const account = await this.addAccount.add({ name, email, password })
       return success(account)
