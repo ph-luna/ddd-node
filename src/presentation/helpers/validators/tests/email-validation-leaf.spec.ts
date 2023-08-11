@@ -23,7 +23,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-const inputSample = {
+const inputDummy = {
   email: 'any_email@mail.com'
 }
 
@@ -31,8 +31,8 @@ describe('[Email Validation Leaf]', () => {
   it('Should call EmailValidator with correct email', () => {
     const { sut, emailValidatorStub } = makeSut()
     const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
-    sut.validate(inputSample)
-    expect(isValidSpy).toBeCalledWith(inputSample.email)
+    sut.validate(inputDummy)
+    expect(isValidSpy).toBeCalledWith(inputDummy.email)
   })
 
   it('Should throw if EmailValidator throws', () => {
@@ -46,7 +46,7 @@ describe('[Email Validation Leaf]', () => {
   it('Should return InvalidParamError if EmailValidator returns invalid', () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
-    const error = sut.validate(inputSample)
+    const error = sut.validate(inputDummy)
     expect(error).toEqual(new InvalidParamError('email'))
   })
 })

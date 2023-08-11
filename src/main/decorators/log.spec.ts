@@ -4,7 +4,7 @@ import type { ILogErrorRepository } from '../../data/protocols/log-error-reposit
 import { LogControllerDecorator } from './log'
 import { serverError, success, makeFakeRequest } from '../../presentation/helpers/http-helper'
 
-const accountSample = {
+const accountDummy = {
   email: 'any_email@mail.com',
   name: 'Any Name',
   password: 'any_password123'
@@ -46,7 +46,7 @@ describe('[LogController Decorator]', () => {
   it('Should call handle function from parent controller', async () => {
     const { sut, controllerStub } = makeSut()
     const handleSpy = jest.spyOn(controllerStub, 'handle')
-    const fakeRequest = makeFakeRequest(accountSample)
+    const fakeRequest = makeFakeRequest(accountDummy)
 
     await sut.handle(fakeRequest)
 
@@ -55,7 +55,7 @@ describe('[LogController Decorator]', () => {
 
   it('Should return the same value from parent controller', async () => {
     const { sut } = makeSut()
-    const fakeRequest = makeFakeRequest(accountSample)
+    const fakeRequest = makeFakeRequest(accountDummy)
 
     const httpResponse = await sut.handle(makeFakeRequest(fakeRequest))
 
@@ -68,7 +68,7 @@ describe('[LogController Decorator]', () => {
     jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(new Promise(resolve => { resolve(makeServerError()) }))
     const logSpy = jest.spyOn(logErrorRepositoryStub, 'logError')
 
-    await sut.handle(makeFakeRequest(accountSample))
+    await sut.handle(makeFakeRequest(accountDummy))
 
     expect(logSpy).toBeCalledWith('mocked_stack_error')
   })
