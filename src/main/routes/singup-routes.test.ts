@@ -14,7 +14,6 @@ describe('[SignUp Routes]', () => {
 
   beforeEach(async () => {
     const accountCollection = await MongoHelper.getCollection('accounts')
-
     await accountCollection.deleteMany({})
   })
 
@@ -27,5 +26,15 @@ describe('[SignUp Routes]', () => {
         password: 'ph2023'
       })
       .expect(200)
+  })
+
+  it('Should return an error on missing field name', async () => {
+    await request(app)
+      .post('/api/signup')
+      .send({
+        email: 'ph.luna.vieira@gmail.com',
+        password: 'ph2023'
+      })
+      .expect(400)
   })
 })

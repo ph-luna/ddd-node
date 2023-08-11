@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
-import type { BodyParserError } from '../../presentation/errors'
+
+type BodyParserError = Error & { type: string }
 
 export const bodyParserErrorHandler = (
   error: BodyParserError,
