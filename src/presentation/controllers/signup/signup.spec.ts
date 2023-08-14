@@ -2,7 +2,7 @@ import type { IAddAccount, AddAccountModel, AccountModel, IValidation } from './
 
 import { SignUpController } from './signup'
 import { MissingParamError, ServerError } from '../../errors'
-import { success, badRequest, serverError, makeFakeRequest } from '../../helpers/http-helper'
+import { success, badRequest, serverError, makeFakeRequest } from '../../helpers/http/http-helper'
 
 const accountDummy = {
   id: 'any_id',

@@ -1,6 +1,6 @@
 import type { IAuthentication, IValidation } from './login-protocols'
 
-import { badRequest, makeFakeRequest, serverError, success, unauthorized } from '../../helpers/http-helper'
+import { badRequest, makeFakeRequest, serverError, success, unauthorized } from '../../helpers/http/http-helper'
 import { LoginController } from './login'
 
 const loginDummy = {
