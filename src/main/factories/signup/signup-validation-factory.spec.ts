@@ -1,10 +1,8 @@
 import type { IValidation } from '../../../presentation/protocols/validation'
 import type { IEmailValidator } from '../../../presentation/protocols/email-validator'
 
-import { RequiredFieldValidationLeaf } from '../../../presentation/helpers/validators/required-field-validation-leaf'
-import { ValidationComposite } from '../../../presentation/helpers/validators/validation-composite'
+import { ValidationComposite, RequiredFieldValidationLeaf, EmailValidationLeaf } from '../../../presentation/helpers/validators/'
 import { makeSignUpValidation } from './signup-validation-factory'
-import { EmailValidationLeaf } from '../../../presentation/helpers/validators/email-validation-leaf'
 
 jest.mock('../../../presentation/helpers/validators/validation-composite')
 
