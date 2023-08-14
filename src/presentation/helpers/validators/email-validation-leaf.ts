@@ -1,5 +1,5 @@
 import type { IEmailValidator } from '../../protocols/email-validator'
-import type { IValidation } from './validation'
+import type { IValidation } from '../../protocols/validation'
 
 import { InvalidParamError } from '../../errors'
 

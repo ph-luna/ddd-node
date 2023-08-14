@@ -1,4 +1,4 @@
-import type { IValidation } from '../../../presentation/helpers/validators/validation'
+import type { IValidation } from '../../../presentation/protocols/validation'
 
 import { ValidationComposite } from '../../../presentation/helpers/validators/validation-composite'
 import { RequiredFieldValidationLeaf } from '../../../presentation/helpers/validators/required-field-validation-leaf'
