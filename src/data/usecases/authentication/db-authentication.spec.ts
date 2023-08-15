@@ -35,8 +35,9 @@ describe('[DB Authentication UseCase]', () => {
   it('Should call LoadAccountByEmailRepository with correct email', async () => {
     const { sut, loadAccountByEmailRepository } = makeSut()
     const loadSpy = jest.spyOn(loadAccountByEmailRepository, 'load')
-    await sut.auth({ email: 'any_email@mail.com', password: 'any_password123' })
-    expect(loadSpy).toHaveBeenCalledWith('any_email@mail.com')
+    const { email, password } = accountDummy
+    await sut.auth({ email, password })
+    expect(loadSpy).toHaveBeenCalledWith(accountDummy.email)
   })
 
   it('Should throw if LoadAccountByEmailRepository throws', async () => {
@@ -44,7 +45,8 @@ describe('[DB Authentication UseCase]', () => {
     jest.spyOn(loadAccountByEmailRepository, 'load').mockReturnValueOnce(new Promise((resolve, reject) => {
       reject(new Error())
     }))
-    const promise = sut.auth({ email: 'any_email@mail.com', password: 'any_password123' })
+    const { email, password } = accountDummy
+    const promise = sut.auth({ email, password })
     await expect(promise).rejects.toThrow()
   })
 })
