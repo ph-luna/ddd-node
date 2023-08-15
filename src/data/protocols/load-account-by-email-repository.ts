@@ -1,5 +1,5 @@
-import type { AccountModel } from '../usecases/add-account/db-add-account-protocols'
+import type { IAccountModel } from '../usecases/add-account/db-add-account-protocols'
 
 export interface LoadAccountByEmailRepository {
-  load: (email: string) => Promise<AccountModel>
+  load: (email: string) => Promise<IAccountModel>
 }

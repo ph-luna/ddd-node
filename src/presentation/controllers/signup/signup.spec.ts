@@ -1,4 +1,4 @@
-import type { IAddAccount, AddAccountModel, AccountModel, IValidation } from './signup-protocols'
+import type { IAddAccount, AddIAccountModel, IAccountModel, IValidation } from './signup-protocols'
 
 import { SignUpController } from './signup'
 import { MissingParamError, ServerError } from '../../errors'
@@ -12,7 +12,7 @@ const accountDummy = {
 }
 
 class AddAccountStub implements IAddAccount {
-  async add (account: AddAccountModel): Promise<AccountModel> {
+  async add (account: AddIAccountModel): Promise<IAccountModel> {
     return await new Promise((resolve) => {
       resolve(accountDummy)
     })

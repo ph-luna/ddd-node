@@ -1,4 +1,4 @@
-import type { AccountModel } from '../add-account/db-add-account-protocols'
+import type { IAccountModel } from '../add-account/db-add-account-protocols'
 import type { LoadAccountByEmailRepository } from '../../protocols/load-account-by-email-repository'
 
 import { DbAuthentication } from './db-authentication'
@@ -11,7 +11,7 @@ const accountDummy = {
 }
 
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-  async load (email: string): Promise<AccountModel> {
+  async load (email: string): Promise<IAccountModel> {
     return await new Promise(resolve => { resolve(accountDummy) })
   }
 }

@@ -1,5 +1,5 @@
 
-import type { IEncrypter, AddAccountModel, AccountModel, AddAccountRepository } from './db-add-account-protocols'
+import type { IEncrypter, AddIAccountModel, IAccountModel, AddAccountRepository } from './db-add-account-protocols'
 
 import { DBAddAccount } from './db-add-account'
 
@@ -31,7 +31,7 @@ class EncrypterStub implements IEncrypter {
 }
 
 class AddAccountRepositoryStub implements AddAccountRepository {
-  async add (account: AddAccountModel): Promise<AccountModel> {
+  async add (account: AddIAccountModel): Promise<IAccountModel> {
     return await new Promise(resolve => {
       resolve(makeFakeAccountAdded())
     })
