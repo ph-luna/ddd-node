@@ -1,5 +1,5 @@
 import type { IAccountModel } from '../add-account/db-add-account-protocols'
-import type { LoadAccountByEmailRepository } from '../../protocols/load-account-by-email-repository'
+import type { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 
 import { DbAuthentication } from './db-authentication'
 

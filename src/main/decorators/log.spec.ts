@@ -1,5 +1,5 @@
 import type { IController, IHttpRequest, IHttpResponse } from '../../presentation/protocols'
-import type { ILogErrorRepository } from '../../data/protocols/log-error-repository'
+import type { ILogErrorRepository } from '../../data/protocols/db/log-error-repository'
 
 import { LogControllerDecorator } from './log'
 import { serverError, success, makeFakeRequest } from '../../presentation/helpers/http/http-helper'

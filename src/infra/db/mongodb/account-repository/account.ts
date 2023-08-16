@@ -1,4 +1,4 @@
-import type { AddAccountRepository } from '../../../../data/protocols/add-account-repository'
+import type { AddAccountRepository } from '../../../../data/protocols/db/add-account-repository'
 import type { AddIAccountModel } from '../../../../domain/usecases/add-account'
 import type { IAccountModel } from '../../../../domain/models/account'
 
