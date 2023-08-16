@@ -1,5 +1,6 @@
 import type { IAccountModel } from '../add-account/db-add-account-protocols'
 import type { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
+import type { IHashComparer } from '../../protocols/criptography/hash-compare'
 
 import { DbAuthentication } from './db-authentication'
 
@@ -16,18 +17,27 @@ class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
   }
 }
 
+class HashComparerStub implements IHashComparer {
+  async compare (firstValue: string, secondValue: string): Promise<boolean> {
+    return true
+  }
+}
+
 interface SutTypes {
   sut: DbAuthentication
   loadAccountByEmailRepository: LoadAccountByEmailRepositoryStub
+  hashComparerStub: HashComparerStub
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepository = new LoadAccountByEmailRepositoryStub()
-  const sut = new DbAuthentication(loadAccountByEmailRepository)
+  const hashComparerStub = new HashComparerStub()
+  const sut = new DbAuthentication(loadAccountByEmailRepository, hashComparerStub)
 
   return {
     sut,
-    loadAccountByEmailRepository
+    loadAccountByEmailRepository,
+    hashComparerStub
   }
 }
 
@@ -58,5 +68,13 @@ describe('[DB Authentication UseCase]', () => {
     const { email, password } = accountDummy
     const accessToken = await sut.auth({ email, password })
     expect(accessToken).toBe(null)
+  })
+
+  it('Should call HashComparer with correct values', async () => {
+    const { sut, hashComparerStub } = makeSut()
+    const compareSpy = jest.spyOn(hashComparerStub, 'compare')
+    const { email, password } = accountDummy
+    await sut.auth({ email, password })
+    expect(compareSpy).toHaveBeenCalledWith(password, 'any_password123')
   })
 })
