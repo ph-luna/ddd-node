@@ -1,5 +1,5 @@
 import type {
-  LoadAccountByEmailRepository,
+  ILoadAccountByEmailRepository,
   IAuthentication,
   IAuthenticationModel,
   IHashComparer,
@@ -8,25 +8,25 @@ import type {
 } from './db-authentication-protocols'
 
 export class DbAuthentication implements IAuthentication {
-  private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository
+  private readonly ILoadAccountByEmailRepository: ILoadAccountByEmailRepository
   private readonly hashComparer: IHashComparer
   private readonly tokenGenerator: ITokenGenerator
   private readonly updateAccessTokenRepository: IUpdateAccessTokenRepository
 
   constructor (
-    loadAccountByEmailRepository: LoadAccountByEmailRepository,
+    ILoadAccountByEmailRepository: ILoadAccountByEmailRepository,
     hashComparer: IHashComparer,
     tokenGenerator: ITokenGenerator,
     updateAccessTokenRepository: IUpdateAccessTokenRepository
   ) {
-    this.loadAccountByEmailRepository = loadAccountByEmailRepository
+    this.ILoadAccountByEmailRepository = ILoadAccountByEmailRepository
     this.hashComparer = hashComparer
     this.tokenGenerator = tokenGenerator
     this.updateAccessTokenRepository = updateAccessTokenRepository
   }
 
   async auth (authentication: IAuthenticationModel): Promise<string | null> {
-    const account = await this.loadAccountByEmailRepository.load(authentication.email)
+    const account = await this.ILoadAccountByEmailRepository.load(authentication.email)
     if (!account) return null
     const isPasswordValid = await this.hashComparer.compare(authentication.password, account?.password)
     if (!isPasswordValid) return null

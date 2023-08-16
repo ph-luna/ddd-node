@@ -1,6 +1,6 @@
 import type {
   IAccountModel,
-  LoadAccountByEmailRepository,
+  ILoadAccountByEmailRepository,
   IHashComparer,
   ITokenGenerator,
   IUpdateAccessTokenRepository
@@ -20,7 +20,7 @@ const accountDummy = {
   password: 'hashed_password123'
 }
 
-class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
+class ILoadAccountByEmailRepositoryStub implements ILoadAccountByEmailRepository {
   async load (email: string): Promise<IAccountModel | null> {
     return await new Promise(resolve => {
       resolve(accountDummy)
@@ -48,19 +48,19 @@ class UpdateAccessTokenRepositoryStub implements IUpdateAccessTokenRepository {
 
 interface SutTypes {
   sut: DbAuthentication
-  loadAccountByEmailRepository: LoadAccountByEmailRepositoryStub
+  ILoadAccountByEmailRepository: ILoadAccountByEmailRepositoryStub
   hashComparerStub: HashComparerStub
   tokenGeneratorStub: TokenGeneratorStub
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepositoryStub
 }
 
 const makeSut = (): SutTypes => {
-  const loadAccountByEmailRepository = new LoadAccountByEmailRepositoryStub()
+  const ILoadAccountByEmailRepository = new ILoadAccountByEmailRepositoryStub()
   const hashComparerStub = new HashComparerStub()
   const tokenGeneratorStub = new TokenGeneratorStub()
   const updateAccessTokenRepositoryStub = new UpdateAccessTokenRepositoryStub()
   const sut = new DbAuthentication(
-    loadAccountByEmailRepository,
+    ILoadAccountByEmailRepository,
     hashComparerStub,
     tokenGeneratorStub,
     updateAccessTokenRepositoryStub
@@ -68,7 +68,7 @@ const makeSut = (): SutTypes => {
 
   return {
     sut,
-    loadAccountByEmailRepository,
+    ILoadAccountByEmailRepository,
     hashComparerStub,
     tokenGeneratorStub,
     updateAccessTokenRepositoryStub
@@ -76,16 +76,16 @@ const makeSut = (): SutTypes => {
 }
 
 describe('[DB Authentication UseCase]', () => {
-  it('Should call LoadAccountByEmailRepository with correct email', async () => {
-    const { sut, loadAccountByEmailRepository } = makeSut()
-    const loadSpy = jest.spyOn(loadAccountByEmailRepository, 'load')
+  it('Should call ILoadAccountByEmailRepository with correct email', async () => {
+    const { sut, ILoadAccountByEmailRepository } = makeSut()
+    const loadSpy = jest.spyOn(ILoadAccountByEmailRepository, 'load')
     await sut.auth(authenticationDummy)
     expect(loadSpy).toHaveBeenCalledWith(authenticationDummy.email)
   })
 
-  it('Should throw if LoadAccountByEmailRepository throws', async () => {
-    const { sut, loadAccountByEmailRepository } = makeSut()
-    jest.spyOn(loadAccountByEmailRepository, 'load').mockReturnValueOnce(
+  it('Should throw if ILoadAccountByEmailRepository throws', async () => {
+    const { sut, ILoadAccountByEmailRepository } = makeSut()
+    jest.spyOn(ILoadAccountByEmailRepository, 'load').mockReturnValueOnce(
       new Promise((resolve, reject) => {
         reject(new Error())
       })
@@ -94,9 +94,9 @@ describe('[DB Authentication UseCase]', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  it('Should return null if LoadAccountByEmailRepository returns null', async () => {
-    const { sut, loadAccountByEmailRepository } = makeSut()
-    jest.spyOn(loadAccountByEmailRepository, 'load').mockReturnValueOnce(
+  it('Should return null if ILoadAccountByEmailRepository returns null', async () => {
+    const { sut, ILoadAccountByEmailRepository } = makeSut()
+    jest.spyOn(ILoadAccountByEmailRepository, 'load').mockReturnValueOnce(
       new Promise((resolve) => { resolve(null) })
     )
     const accessToken = await sut.auth(authenticationDummy)
