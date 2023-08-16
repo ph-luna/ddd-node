@@ -71,7 +71,7 @@ describe('[DB Authentication UseCase]', () => {
       new Promise((resolve) => { resolve(null) })
     )
     const accessToken = await sut.auth(authenticationDummy)
-    expect(accessToken).toBe(null)
+    expect(accessToken).toBeNull()
   })
 
   it('Should call HashComparer with correct values', async () => {
@@ -90,5 +90,14 @@ describe('[DB Authentication UseCase]', () => {
     )
     const promise = sut.auth(authenticationDummy)
     await expect(promise).rejects.toThrow()
+  })
+
+  it('Should return null if HashComparer returns false', async () => {
+    const { sut, hashComparerStub } = makeSut()
+    jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(
+      new Promise((resolve) => { resolve(false) })
+    )
+    const accessToken = await sut.auth(authenticationDummy)
+    expect(accessToken).toBeNull()
   })
 })
