@@ -1,5 +1,5 @@
 
-import type { IEncrypter, AddIAccountModel, IAccountModel, AddAccountRepository } from './db-add-account-protocols'
+import type { IEncrypter, AddIAccountModel, IAccountModel, IAddAccountRepository } from './db-add-account-protocols'
 
 import { DBAddAccount } from './db-add-account'
 
@@ -30,7 +30,7 @@ class EncrypterStub implements IEncrypter {
   }
 }
 
-class AddAccountRepositoryStub implements AddAccountRepository {
+class AddAccountRepositoryStub implements IAddAccountRepository {
   async add (account: AddIAccountModel): Promise<IAccountModel> {
     return await new Promise(resolve => {
       resolve(makeFakeAccountAdded())
@@ -41,15 +41,15 @@ class AddAccountRepositoryStub implements AddAccountRepository {
 interface SutTypes {
   sut: DBAddAccount
   encrypterStub: IEncrypter
-  addAccountRepositoryStub: AddAccountRepository
+  IAddAccountRepositoryStub: IAddAccountRepository
 }
 
 const makeSut = (): SutTypes => {
   const encrypterStub = new EncrypterStub()
-  const addAccountRepositoryStub = new AddAccountRepositoryStub()
-  const sut = new DBAddAccount(encrypterStub, addAccountRepositoryStub)
+  const IAddAccountRepositoryStub = new AddAccountRepositoryStub()
+  const sut = new DBAddAccount(encrypterStub, IAddAccountRepositoryStub)
 
-  return { sut, encrypterStub, addAccountRepositoryStub }
+  return { sut, encrypterStub, IAddAccountRepositoryStub }
 }
 
 describe('[DBAddAccount usecases]', () => {
@@ -73,18 +73,18 @@ describe('[DBAddAccount usecases]', () => {
     await expect(promise).rejects.toThrow()
   })
 
-  it('Should call DBAddAccountRepository with correct values', async () => {
-    const { sut, addAccountRepositoryStub } = makeSut()
-    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
+  it('Should call DBIAddAccountRepository with correct values', async () => {
+    const { sut, IAddAccountRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(IAddAccountRepositoryStub, 'add')
 
     await sut.add(makeFakeAccountData())
 
     expect(addSpy).toHaveBeenCalledWith({ ...makeFakeAccountData(), password: 'encrypted_password' })
   })
 
-  it('Should throw if AddAccountRepository throws', async () => {
-    const { sut, addAccountRepositoryStub } = makeSut()
-    jest.spyOn(addAccountRepositoryStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => {
+  it('Should throw if IAddAccountRepository throws', async () => {
+    const { sut, IAddAccountRepositoryStub } = makeSut()
+    jest.spyOn(IAddAccountRepositoryStub, 'add').mockReturnValueOnce(new Promise((resolve, reject) => {
       reject(new Error())
     }))
 
