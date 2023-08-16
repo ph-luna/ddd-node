@@ -1,7 +1,7 @@
 import type { IAccountModel } from '../models/account'
 
-export type AddIAccountModel = Pick<IAccountModel, 'name' | 'email' | 'password'>
+export type IAddAccountModel = Pick<IAccountModel, 'name' | 'email' | 'password'>
 
 export interface IAddAccount {
-  add: (account: AddIAccountModel) => Promise<IAccountModel>
+  add: (account: IAddAccountModel) => Promise<IAccountModel>
 }
