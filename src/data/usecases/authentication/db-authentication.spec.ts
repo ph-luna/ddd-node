@@ -29,7 +29,7 @@ class ILoadAccountByEmailRepositoryStub implements ILoadAccountByEmailRepository
 }
 
 class HashComparerStub implements IHashComparer {
-  async compare (firstValue: string, secondValue: string): Promise<boolean> {
+  async compare (value: string, hash: string): Promise<boolean> {
     return true
   }
 }
