@@ -4,16 +4,21 @@ import type { IHashComparer } from '../../protocols/criptography/hash-compare'
 
 import { DbAuthentication } from './db-authentication'
 
-const accountDummy = {
-  id: 'anyId',
-  name: 'Any Name',
+const authenticationDummy = {
   email: 'any_email@mail.com',
   password: 'any_password123'
 }
 
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
   async load (email: string): Promise<IAccountModel | null> {
-    return await new Promise(resolve => { resolve(accountDummy) })
+    return await new Promise(resolve => {
+      resolve({
+        id: 'anyId',
+        name: 'Any Name',
+        email: 'any_email@mail.com',
+        password: 'hashed_password123'
+      })
+    })
   }
 }
 
@@ -45,18 +50,18 @@ describe('[DB Authentication UseCase]', () => {
   it('Should call LoadAccountByEmailRepository with correct email', async () => {
     const { sut, loadAccountByEmailRepository } = makeSut()
     const loadSpy = jest.spyOn(loadAccountByEmailRepository, 'load')
-    const { email, password } = accountDummy
-    await sut.auth({ email, password })
-    expect(loadSpy).toHaveBeenCalledWith(accountDummy.email)
+    await sut.auth(authenticationDummy)
+    expect(loadSpy).toHaveBeenCalledWith(authenticationDummy.email)
   })
 
   it('Should throw if LoadAccountByEmailRepository throws', async () => {
     const { sut, loadAccountByEmailRepository } = makeSut()
-    jest.spyOn(loadAccountByEmailRepository, 'load').mockReturnValueOnce(new Promise((resolve, reject) => {
-      reject(new Error())
-    }))
-    const { email, password } = accountDummy
-    const promise = sut.auth({ email, password })
+    jest.spyOn(loadAccountByEmailRepository, 'load').mockReturnValueOnce(
+      new Promise((resolve, reject) => {
+        reject(new Error())
+      })
+    )
+    const promise = sut.auth(authenticationDummy)
     await expect(promise).rejects.toThrow()
   })
 
@@ -65,16 +70,14 @@ describe('[DB Authentication UseCase]', () => {
     jest.spyOn(loadAccountByEmailRepository, 'load').mockReturnValueOnce(
       new Promise((resolve) => { resolve(null) })
     )
-    const { email, password } = accountDummy
-    const accessToken = await sut.auth({ email, password })
+    const accessToken = await sut.auth(authenticationDummy)
     expect(accessToken).toBe(null)
   })
 
   it('Should call HashComparer with correct values', async () => {
     const { sut, hashComparerStub } = makeSut()
     const compareSpy = jest.spyOn(hashComparerStub, 'compare')
-    const { email, password } = accountDummy
-    await sut.auth({ email, password })
-    expect(compareSpy).toHaveBeenCalledWith(password, 'any_password123')
+    await sut.auth(authenticationDummy)
+    expect(compareSpy).toHaveBeenCalledWith(authenticationDummy.password, 'hashed_password123')
   })
 })
