@@ -1,14 +1,21 @@
 import type { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 import type { IAuthentication, IAuthenticationModel } from '../../../domain/usecases/authentication'
 import type { IHashComparer } from '../../protocols/criptography/hash-compare'
+import type { ITokenGenerator } from '../../protocols/criptography/token-generator'
 
 export class DbAuthentication implements IAuthentication {
   private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository
   private readonly hashComparer: IHashComparer
+  private readonly tokenGenerator: ITokenGenerator
 
-  constructor (loadAccountByEmailRepository: LoadAccountByEmailRepository, hashComparer: IHashComparer) {
+  constructor (
+    loadAccountByEmailRepository: LoadAccountByEmailRepository,
+    hashComparer: IHashComparer,
+    tokenGenerator: ITokenGenerator
+  ) {
     this.loadAccountByEmailRepository = loadAccountByEmailRepository
     this.hashComparer = hashComparer
+    this.tokenGenerator = tokenGenerator
   }
 
   async auth (authentication: IAuthenticationModel): Promise<string | null> {
@@ -16,6 +23,6 @@ export class DbAuthentication implements IAuthentication {
     if (!account) return null
     const isPasswordValid = await this.hashComparer.compare(authentication.password, account?.password)
     if (!isPasswordValid) return null
-    return ''
+    return await this.tokenGenerator.generate(account.id)
   }
 }
