@@ -1,8 +1,10 @@
-import type { IAccountModel } from '../add-account/db-add-account-protocols'
-import type { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
-import type { IHashComparer } from '../../protocols/criptography/hash-compare'
-import type { ITokenGenerator } from '../../protocols/criptography/token-generator'
-import type { IUpdateAccessTokenRepository } from '../../protocols/db/update-access-token-repository'
+import type {
+  IAccountModel,
+  LoadAccountByEmailRepository,
+  IHashComparer,
+  ITokenGenerator,
+  IUpdateAccessTokenRepository
+} from './db-authentication-protocols'
 
 import { DbAuthentication } from './db-authentication'
 
