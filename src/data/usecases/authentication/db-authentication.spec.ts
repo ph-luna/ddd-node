@@ -130,4 +130,10 @@ describe('[DB Authentication UseCase]', () => {
     const promise = sut.auth(authenticationDummy)
     await expect(promise).rejects.toThrow()
   })
+
+  it('Should return an access token on success', async () => {
+    const { sut } = makeSut()
+    const accessToken = await sut.auth(authenticationDummy)
+    expect(accessToken).toBe('any_access_token')
+  })
 })
