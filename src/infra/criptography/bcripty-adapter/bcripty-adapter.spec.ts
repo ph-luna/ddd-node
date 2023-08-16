@@ -4,7 +4,7 @@ import { BcryptAdapter } from './bcripty-adapter'
 
 jest.mock('bcrypt', () => ({
   async hash (): Promise<string> {
-    return await new Promise(resolve => { resolve('encrypted_value') })
+    return await new Promise(resolve => { resolve('hashed_value') })
   }
 }))
 
@@ -22,10 +22,10 @@ describe('[Bcrypt Adapter]', () => {
     expect(hashSpy).toHaveBeenCalledWith('any_value', 12)
   })
 
-  it('Should return encrypted value on success', async () => {
+  it('Should return hashed value on success', async () => {
     const sut = makeSut()
-    const encryptedValue = await sut.hash('any_value')
-    expect(encryptedValue).toBe('encrypted_value')
+    const hashedValue = await sut.hash('any_value')
+    expect(hashedValue).toBe('hashed_value')
   })
 
   it('Should throw if bcrypt throws', async () => {
