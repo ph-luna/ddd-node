@@ -1,6 +1,7 @@
 import type { IAccountModel } from '../add-account/db-add-account-protocols'
 import type { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 import type { IHashComparer } from '../../protocols/criptography/hash-compare'
+import type { ITokenGenerator } from '../../protocols/criptography/token-generator'
 
 import { DbAuthentication } from './db-authentication'
 
@@ -9,15 +10,17 @@ const authenticationDummy = {
   password: 'any_password123'
 }
 
+const accountDummy = {
+  id: 'anyId',
+  name: 'Any Name',
+  email: 'any_email@mail.com',
+  password: 'hashed_password123'
+}
+
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
   async load (email: string): Promise<IAccountModel | null> {
     return await new Promise(resolve => {
-      resolve({
-        id: 'anyId',
-        name: 'Any Name',
-        email: 'any_email@mail.com',
-        password: 'hashed_password123'
-      })
+      resolve(accountDummy)
     })
   }
 }
@@ -28,21 +31,30 @@ class HashComparerStub implements IHashComparer {
   }
 }
 
+class TokenGeneratorStub implements ITokenGenerator {
+  async generate (id: string): Promise<string> {
+    return await new Promise(resolve => { resolve('any_access_token') })
+  }
+}
+
 interface SutTypes {
   sut: DbAuthentication
   loadAccountByEmailRepository: LoadAccountByEmailRepositoryStub
   hashComparerStub: HashComparerStub
+  tokenGeneratorStub: TokenGeneratorStub
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepository = new LoadAccountByEmailRepositoryStub()
   const hashComparerStub = new HashComparerStub()
-  const sut = new DbAuthentication(loadAccountByEmailRepository, hashComparerStub)
+  const tokenGeneratorStub = new TokenGeneratorStub()
+  const sut = new DbAuthentication(loadAccountByEmailRepository, hashComparerStub, tokenGeneratorStub)
 
   return {
     sut,
     loadAccountByEmailRepository,
-    hashComparerStub
+    hashComparerStub,
+    tokenGeneratorStub
   }
 }
 
@@ -78,7 +90,7 @@ describe('[DB Authentication UseCase]', () => {
     const { sut, hashComparerStub } = makeSut()
     const compareSpy = jest.spyOn(hashComparerStub, 'compare')
     await sut.auth(authenticationDummy)
-    expect(compareSpy).toHaveBeenCalledWith(authenticationDummy.password, 'hashed_password123')
+    expect(compareSpy).toHaveBeenCalledWith(authenticationDummy.password, accountDummy.password)
   })
 
   it('Should throw if HashComparer throws', async () => {
@@ -99,5 +111,12 @@ describe('[DB Authentication UseCase]', () => {
     )
     const accessToken = await sut.auth(authenticationDummy)
     expect(accessToken).toBeNull()
+  })
+
+  it('Should call TokenGenerator with correct id', async () => {
+    const { sut, tokenGeneratorStub } = makeSut()
+    const generateSpy = jest.spyOn(tokenGeneratorStub, 'generate')
+    await sut.auth(authenticationDummy)
+    expect(generateSpy).toHaveBeenCalledWith(accountDummy.id)
   })
 })
