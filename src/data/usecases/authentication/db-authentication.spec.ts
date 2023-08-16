@@ -11,7 +11,7 @@ const accountDummy = {
 }
 
 class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-  async load (email: string): Promise<IAccountModel> {
+  async load (email: string): Promise<IAccountModel | null> {
     return await new Promise(resolve => { resolve(accountDummy) })
   }
 }
@@ -48,5 +48,15 @@ describe('[DB Authentication UseCase]', () => {
     const { email, password } = accountDummy
     const promise = sut.auth({ email, password })
     await expect(promise).rejects.toThrow()
+  })
+
+  it('Should return null if LoadAccountByEmailRepository returns null', async () => {
+    const { sut, loadAccountByEmailRepository } = makeSut()
+    jest.spyOn(loadAccountByEmailRepository, 'load').mockReturnValueOnce(
+      new Promise((resolve) => { resolve(null) })
+    )
+    const { email, password } = accountDummy
+    const accessToken = await sut.auth({ email, password })
+    expect(accessToken).toBe(null)
   })
 })
